@@ -1,0 +1,65 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <IsPackable>false</IsPackable>
+    <AssemblyName></AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="8.1.1" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="ClientApp\components\antd\AvailabilityCRUDModal.tsx" />
+    <None Remove="ClientApp\components\antd\Func_antdcommon.tsx" />
+    <None Remove="ClientApp\components\FetchCalendar.tsx" />
+    <None Remove="ClientApp\components\materialUI\EventCRUDModal.tsx" />
+    <None Remove="ClientApp\components\materialUI\ShowMoreModal.tsx" />
+    <None Remove="ClientApp\components\materialUI\TransitionalModal.tsx" />
+    <None Remove="ClientApp\components\react-big-calendar\customView.tsx" />
+    <None Remove="ClientApp\components\react-big-calendar\events.tsx" />
+    <None Remove="ClientApp\components\react-big-calendar\ExampleControlSlot.tsx" />
+    <None Remove="ClientApp\components\ReactCalendar.tsx" />
+    <None Remove="yarn-error.log" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\components\modal\AvailabilityCRUDModal.tsx" />
+    <TypeScriptCompile Include="ClientApp\components\antd\Func_antdcommon.tsx" />
+    <TypeScriptCompile Include="ClientApp\components\materialUI\ShowMoreModal.tsx">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="ClientApp\components\materialUI\EventCRUDModal.tsx">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="ClientApp\components\materialUI\TransitionalModal.tsx" />
+    <TypeScriptCompile Include="ClientApp\components\react-big-calendar\ExampleControlSlot.tsx" />
+    <TypeScriptCompile Include="ClientApp\components\react-big-calendar\customView.tsx" />
+    <TypeScriptCompile Include="ClientApp\components\react-big-calendar\events.tsx" />
+  </ItemGroup>
+  <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">
+    <Exec Command="node --version" ContinueOnError="true">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+    <Exec Command="node node_modules/webpack/bin/webpack.js" />
+    <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+    <Message Importance="high" Text="Performing first-run Webpack build..." />
+  </Target>
+  <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
+    <Exec Command="npm install" />
+    <Exec Command="node node_modules/webpack/bin/webpack.js --env.prod" />
+    <ItemGroup>
+      <DistFiles Include="wwwroot\dist\**; ClientApp\dist\**" />
+      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>%(DistFiles.Identity)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
+</Project>
